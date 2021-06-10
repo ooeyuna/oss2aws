@@ -1,6 +1,7 @@
 require 'json'
 
 task = ARGV[0]
+OSS_PATH = ARGV[1]
 TASK = task
 
 INFO_LOG = File.open("log/#{task}_output.log", 'w')
@@ -12,7 +13,7 @@ ERROR_LIST = File.open("result/#{task}_error_list.json", 'a')
 COMPLETE_ROOMS = File.read("result/#{task}_fill_done.json")
 
 def check(uuid) # success, need_upload, result
-  zip_stat_cmd = "oss stat oss://white-cn-doc-convert/test/#{uuid}.zip"
+  zip_stat_cmd = "oss stat oss://white-cn-doc-convert/#{OSS_PATH}/#{uuid}.zip"
   result = `#{zip_stat_cmd}`
   status = $?.exitstatus
   return true, false, "check room: #{uuid} success, skip" if status == 0
@@ -21,7 +22,7 @@ def check(uuid) # success, need_upload, result
 end
 
 def fill(uuid) # success, result
-  zip_stat_cmd = "oss cp empty.zip oss://white-cn-doc-convert/test/#{uuid}.zip"
+  zip_stat_cmd = "oss cp empty.zip oss://white-cn-doc-convert/#{OSS_PATH}/#{uuid}.zip"
   result = `#{zip_stat_cmd}`
   status = $?.exitstatus
   return true, "fill room: #{uuid} success, skip" if status == 0
