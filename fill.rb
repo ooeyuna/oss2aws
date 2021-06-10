@@ -48,11 +48,12 @@ File.open("fill_tasks/#{task}.json") do |file|
   data = JSON.load(file).each do |uuid|
     write_log("skip room: #{uuid}") and next if COMPLETE_ROOMS.include?(uuid)
     
-    # download
+    # check
     success, need_upload, result = check(uuid)
     write_error(uuid, result) and next if not success
 
     if need_upload
+      # fill
       success, result = fill(uuid)
       write_error(uuid, result) and next if not success
 
@@ -61,6 +62,7 @@ File.open("fill_tasks/#{task}.json") do |file|
       write_log(result)
       next
     else
+      # skip
       SKIP_LIST.write("#{uuid},")
       SKIP_LIST.flush
       result = "skip room: #{uuid} zip exist"
