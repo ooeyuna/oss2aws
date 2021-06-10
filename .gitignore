@@ -1,0 +1,3 @@
+*.log
+ossutil_output
+result/*.json
